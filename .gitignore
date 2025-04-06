@@ -2,5 +2,6 @@
 **/__pycache__
 **/non_git_datasets
 .*
+*.csv
 !/.gitignore
 
