@@ -1,0 +1,6 @@
+/__pycache__
+**/__pycache__
+**/non_git_datasets
+.*
+!/.gitignore
+
