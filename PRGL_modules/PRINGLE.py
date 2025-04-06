@@ -5,6 +5,7 @@ from scipy.spatial.distance import cdist
 from scipy.ndimage import gaussian_filter1d
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import matplotlib.pyplot as plt
+import seaborn as sns
 import scipy as sp
 
 
@@ -851,11 +852,12 @@ class LR_flattening:
         axes[0].set_aspect('equal', adjustable='box')
         axes[0].grid(True)
         axes[0].set_title(f'Circular: {self.circular}')
+        
         # LR distance color mapping
         divider = make_axes_locatable(axes[1])
         cax = divider.append_axes('right', size='5%', pad=0.05)
         sc = axes[1].scatter(sub_slice[y_col], sub_slice[z_col], c=distance_analysis['intersection_distance'],
-                            cmap='vanimo', vmin=-(abs(distance_analysis['intersection_distance']).max()),
+                            cmap=sns.color_palette("icefire", as_cmap=True), vmin=-(abs(distance_analysis['intersection_distance']).max()),
                             vmax=abs(distance_analysis['intersection_distance']).max())
         fig.colorbar(sc, cax=cax, label='New apical-basal distance')
         axes[1].scatter(start_point[1], start_point[0], color='green', s=100, label='Starting Point')
@@ -875,7 +877,7 @@ class LR_flattening:
         divider = make_axes_locatable(axes[2])
         cax = divider.append_axes('right', size='5%', pad=0.05)
         sc = axes[2].scatter(sub_slice[y_col], sub_slice[z_col], c=distance_analysis['Dist_from_midline'],
-                            cmap='vanimo', vmin=-(abs(distance_analysis['Dist_from_midline']).max()),
+                            cmap=sns.color_palette("icefire", as_cmap=True), vmin=-(abs(distance_analysis['Dist_from_midline']).max()),
                             vmax=abs(distance_analysis['Dist_from_midline']).max())
         fig.colorbar(sc, cax=cax, label='New left-right distance')
         axes[2].scatter(start_point[1], start_point[0], color='green', s=100, label='Starting Point')
