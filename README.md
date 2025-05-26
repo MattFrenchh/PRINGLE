@@ -4,7 +4,7 @@ This repository contains datasets and Jupyther notebooks associated with our wor
 
 ## Purpose
 
-PRINGLE is a collection of Jupyther notebooks designed to enable the analysis of cell fate patterning in complex 3D tissues such as mouse, fly and chick embryos from 3D biological images. 
+PRINGLE is a collection of Jupyther notebooks, R, and MATLAB scripts designed to enable the analysis of cell fate patterning in complex 3D tissues such as mouse, fly and chick embryos from 3D biological images. 
 
 Patterning, is usually quantified after first defining distinct categories of cells using a gating strategy on fluorescence values, either manually or with clustering methods. However, this approach overlooks biologically meaningful graded changes in identity which occur over complex 4D trajectories. Instead, PRINGLE quantifies patterning directly, using continuous fluorescence levels within each cell in relation to the continuous levels within neighbours. PRINGLE offers:
 
@@ -17,10 +17,10 @@ Patterning, is usually quantified after first defining distinct categories of ce
 
 ## How to use
 
-This repository contains the datasets we have used to produce the figures of our article. These can be used out of the box to learn how PRINGLE works and how to adapt the notebooks for different datasets.
+This repository contains partial datasets we have used to produce the figures of our article. These can be used out of the box to learn how PRINGLE works and how to adapt the notebooks for different datasets.
 
 In order to get started: Clone this repository, navigate to one of the Mouse, Fly or Chick folders. Start a Jupyther lab instance and run the notebooks. NB: It is important to run each notebook in order as each notebook produces outputs used as input for the next one.
 
-
+Also included are the scripts used to generate the plots using the full datasets which can be downloaded directly from the paper supplementary material.
 
 
