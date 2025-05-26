@@ -8,7 +8,7 @@ path_2_data = getwd()
 OS_Sep = '/'
 Wt_E8_data <- as.data.frame(read_csv(paste(path_2_data,"Wt_E8_data.csv", sep =OS_Sep)))
 
-NMPoutlines <- read_csv("NMP_ROI_outlines.csv")
+NMPoutlines <- read_csv("WtE8_NMP_ROI_outlines.csv")
 
 
 # Define functions --------------------------------------------------------
