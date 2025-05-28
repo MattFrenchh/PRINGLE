@@ -6,7 +6,7 @@ Wt_E8_sheetName = 'Wt_E8.5_data';
 
 Gloid_hNMP_filename = 'S2_Data.xlsx';
 Gastruloid_sheetName = 'Gastruloid_D5_Data';
-hNMP_sheetName = 'hNMP_D3_Data';
+hNMP_sheetName = 'hNMP_Spatial_D3_Data';
 
 % Read the full table from the specified sheet
 Wt_E8_data = readtable(Wt_E8_fileName, 'Sheet', Wt_E8_sheetName);
