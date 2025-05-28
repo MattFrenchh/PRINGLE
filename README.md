@@ -21,6 +21,6 @@ This repository contains partial datasets we have used to produce the figures of
 
 In order to get started: Clone this repository, navigate to one of the Mouse, Fly or Chick folders. Start a Jupyther lab instance and run the notebooks. NB: It is important to run each notebook in order as each notebook produces outputs used as input for the next one.
 
-Also included are the scripts used to generate the plots using the full datasets which can be downloaded directly from the paper supplementary material.
+Also included are the scripts used to generate the plots with the full supplementary datasets.
 
 
