@@ -1,11 +1,10 @@
 library(ggplot2)
 library(scico)
 library(patchwork)
+library(readxl)
 
-
-path_2_data = #
-OS_Sep = #/ 
-WtE8_processed_data <- read_csv(paste(path_2_data,"WtE8_data.csv", sep =OS_Sep))
+# Load the data 
+Wt_E8_data <- as.data.frame(read_excel("S1_Data.xlsx", sheet = "Wt_E8.5_data", col_names = TRUE))
 
 # Plot settings
 point_size <- 0.8

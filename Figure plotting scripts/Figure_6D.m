@@ -1,54 +1,47 @@
-%% Directory Setup and Data Import
-% Define the directory containing CSV files
-dataDir = pwd;
+%% Import and Process Data from Excel
 
-% Get list of CSV files in the directory
-fileList = dir(fullfile(dataDir, '*.csv'));
+% Define the file and sheet for each dataset
+Wt_E8_fileName = 'S1_Data.xlsx';
+Wt_E8_sheetName = 'Wt_E8.5_data';
 
-% Initialize an empty structure to store data
-dataStruct = struct();
+Gloid_hNMP_filename = 'S2_Data.xlsx';
+Gastruloid_sheetName = 'Gastruloid_D5_Data';
+hNMP_sheetName = 'hNMP_D3_Data';
 
-% Loop through each CSV file and import data
-for i = 1:length(fileList)
-    % Get the full path to the current CSV file
-    filePath = fullfile(dataDir, fileList(i).name);
-    
-    % Extract the base name of the file without extension
-    [~, fileBaseName, ~] = fileparts(fileList(i).name);
-    
-    % Remove spaces or replace them with underscores for valid variable names
-    fileBaseName = regexprep(fileBaseName, '\s+', '');
-        
-    % Import CSV data into a table
-    data = readtable(filePath);
-    
-    % Store the data in the structure using the file base name as the field name
-    dataStruct.(fileBaseName) = data;
-     
-    % Assign the data to a variable with the same name in the base workspace
-    assignin('base', fileBaseName, data);
-    
-    % Display message indicating successful import
-    disp(['Imported ', fileList(i).name, ' into dataStruct.', fileBaseName]);
-end
+% Read the full table from the specified sheet
+Wt_E8_data = readtable(Wt_E8_fileName, 'Sheet', Wt_E8_sheetName);
+Gloid_data = readtable(Gloid_hNMP_filename, 'Sheet', Gastruloid_sheetName);
+hNMP_data = readtable(Gloid_hNMP_filename, 'Sheet', hNMP_sheetName);
 
-%% Data Extraction and Visualization for Sox2, T, and Tbx6
-% Extract unique replicate values from Sox2posNMP_CV table
-reps = unique(table2array(Sox2posNMP_CV(:, 'Embryo')), 'sorted');
+% Filter the data where NMPROI == 1 for Gastruloid and Wt E8.5 data
+Wt_E8_datanmpData = data(Wt_E8_data.NMPROI == 1, :);
+GastruloidNMPlikedata = Gloid_data(Gloid_data.NMPROI == 1, :);
+
+% Extract unique embryo IDs
+reps = unique(Wt_E8_datanmpData.Embryo, 'sorted');
 nrep = numel(reps);
 
-% Initialize cell arrays to store data
+% Initialize cell arrays
 WtE8_Tdata = cell(nrep, 1);
-WtE8_Tbx6data = cell(nrep, 1);
 WtE8_Sox2data = cell(nrep, 1);
+WtE8_Tbx6data = cell(nrep, 1);
 
-% Loop over each replicate index
+% Loop through each embryo ID and subset the data
 for i = 1:nrep
-    % Extract and convert relevant data to arrays for each dataset
-    WtE8_Tdata{i} = table2array(TposNMP_CV(TposNMP_CV.Embryo == i, 'CVT'));
-    WtE8_Tbx6data{i} = table2array(Tbx6posNMP_CV(Tbx6posNMP_CV.Embryo == i, 'CVTbx6'));
-    WtE8_Sox2data{i} = table2array(Sox2posNMP_CV(Sox2posNMP_CV.Embryo == i, 'CVSox2'));
+    embryoID = reps(i);
+
+    % Subset for current embryo
+    currRows = nmpData.Embryo == embryoID;
+
+    % Extract each gene CV values
+    WtE8_Tdata{i} = nmpData.CV_TBXT(currRows);
+    WtE8_Sox2data{i} = nmpData.CV_SOX2(currRows);
+    WtE8_Tbx6data{i} = nmpData.CV_TBX6(currRows);
 end
+
+% Optional: display a message
+disp('Data import and processing complete for S1_Data.xlsx.');
+%% Data Extraction and Visualization for Wt E8.5 Data
 
 % Plot data using superviolincvcomp function
 figure(1);
@@ -68,9 +61,9 @@ hNMPdataSox2 = cell(5, 1);
 % Loop over each replicate index for CHIR = 2
 for i = 1:5
     % Extract and clean data for CHIR = 2
-    hNMPdataT{i} = table2array(hNMP_processed_data(hNMP_processed_data.Replicate == i & hNMP_processed_data.CHIR == 2 & hNMP_processed_data.logNormT > 0.3, 'CVT'));
-    hNMPdataTbx6{i} = table2array(hNMP_processed_data(hNMP_processed_data.Replicate == i & hNMP_processed_data.CHIR == 2 & hNMP_processed_data.logNormTbx6 > 0.3, 'CVTbx6'));
-    hNMPdataSox2{i} = table2array(hNMP_processed_data(hNMP_processed_data.Replicate == i & hNMP_processed_data.CHIR == 2 & hNMP_processed_data.logNormSox2 > 0.3, 'CVSox2'));
+    hNMPdataT{i} = table2array(hNMP_data(hNMP_data.Replicate == i & hNMP_data.CHIR == 2 & hNMP_data.logNormT > 0.3, 'CV_TBXT'));
+    hNMPdataTbx6{i} = table2array(hNMP_data(hNMP_data.Replicate == i & hNMP_data.CHIR == 2 & hNMP_data.logNormTbx6 > 0.3, 'CV_TBX6'));
+    hNMPdataSox2{i} = table2array(hNMP_data(hNMP_data.Replicate == i & hNMP_data.CHIR == 2 & hNMP_data.logNormSox2 > 0.3, 'CV_SOX2'));
     
     % Remove NaN values from the data
     hNMPdataT{i} = hNMPdataT{i}(~isnan(hNMPdataT{i}));
@@ -92,9 +85,9 @@ hNMPdataSox2 = cell(5, 1);
 % Loop over each replicate index for CHIR = 3
 for i = 2:4
     % Extract and clean data for CHIR = 3
-    hNMPdataT{i} = table2array(hNMP_processed_data(hNMP_processed_data.Replicate == i & hNMP_processed_data.CHIR == 3 & hNMP_processed_data.logNormT > 0.3, 'CVT'));
-    hNMPdataTbx6{i} = table2array(hNMP_processed_data(hNMP_processed_data.Replicate == i & hNMP_processed_data.CHIR == 3 & hNMP_processed_data.logNormTbx6 > 0.3, 'CVTbx6'));
-    hNMPdataSox2{i} = table2array(hNMP_processed_data(hNMP_processed_data.Replicate == i & hNMP_processed_data.CHIR == 3 & hNMP_processed_data.logNormSox2 > 0.3, 'CVSox2'));
+    hNMPdataT{i} = table2array(hNMP_data(hNMP_data.Replicate == i & hNMP_data.CHIR == 3 & hNMP_data.logNormT > 0.3, 'CV_TBXT'));
+    hNMPdataTbx6{i} = table2array(hNMP_data(hNMP_data.Replicate == i & hNMP_data.CHIR == 3 & hNMP_data.logNormTbx6 > 0.3, 'CV_TBX6'));
+    hNMPdataSox2{i} = table2array(hNMP_data(hNMP_data.Replicate == i & hNMP_data.CHIR == 3 & hNMP_data.logNormSox2 > 0.3, 'CV_SOX2'));
     
     % Remove NaN values from the data
     hNMPdataT{i} = hNMPdataT{i}(~isnan(hNMPdataT{i}));
@@ -115,7 +108,7 @@ Gloid_Tbx6data = {};
 Gloid_Sox2data = {};
 
 % Get unique replicate values from GastruloidNMPlikeTdata
-uniqueReplicates = unique(GastruloidNMPlikeTdata.Replicate);
+uniqueReplicates = unique(GastruloidNMPlikedata.Replicate);
 
 % Counter for indexing
 counter = 1;
@@ -126,9 +119,9 @@ for i = 1:length(uniqueReplicates)
     currentReplicate = uniqueReplicates{i};
 
     % Extract and clean data for each dataset
-    Gloid_Tdata{counter} = table2array(GastruloidNMPlikeTdata(strcmp(GastruloidNMPlikeTdata.Replicate, currentReplicate), 'CVT'));
-    Gloid_Tbx6data{counter} = table2array(GastruloidNMPlikeTbx6data(strcmp(GastruloidNMPlikeTbx6data.Replicate, currentReplicate), 'CVTbx6'));
-    Gloid_Sox2data{counter} = table2array(GastruloidNMPlikeSox2data(strcmp(GastruloidNMPlikeSox2data.Replicate, currentReplicate), 'CVSox2'));
+    Gloid_Tdata{counter} = table2array(GastruloidNMPlikedata(strcmp(GastruloidNMPlikedata.Replicate, currentReplicate), 'CV_TBXT'));
+    Gloid_Tbx6data{counter} = table2array(GastruloidNMPlikedata(strcmp(GastruloidNMPlikedata.Replicate, currentReplicate), 'CV_TBX6'));
+    Gloid_Sox2data{counter} = table2array(GastruloidNMPlikedata(strcmp(GastruloidNMPlikedata.Replicate, currentReplicate), 'CV_SOX2'));
 
     % Remove NaN values from the data
     Gloid_Tdata{counter} = Gloid_Tdata{counter}(~isnan(Gloid_Tdata{counter}));

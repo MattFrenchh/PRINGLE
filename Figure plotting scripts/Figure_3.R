@@ -3,21 +3,18 @@ library(scico)
 library(patchwork)
 library(factoextra)
 library(RColorBrewer)
+library(readxl)
 
 # Import data
-path_2_data = getwd()
-OS_Sep = '/'
-Wt_E8_data <- read_csv(paste(path_2_data,"Wt_E8_data.csv", sep =OS_Sep))
+Wt_E8_data <- as.data.frame(read_excel("S1_Data.xlsx", sheet = "Wt_E8.5_data", col_names = TRUE))
 
 # Isolate example embyro of four somite pairs where fate map is known.
 SP4<-Wt_E8_data[Wt_E8_data$SP==4,]
-SP41<-SP4[SP4$Techrep==1,] # Take first replicate
+SP41<-SP4[SP4$SP_Rep==1,] # Take first replicate
 notnowidth = 50/2 # Region boxes defined as width of Notochord - approximately 50 microns
 PSend<-max(SP41$Scaled_Rel_AP_Position) * 0.9 # Adjust box length to fit fate map region definitions
-notostart<-(0)
+notostart<-(0) # Notochord origin at 0 microns
 ROIdepth<-(PSend-notostart)/5 # 5 regions along PS length
-
-
 
 # Figure 3a -------------------------------------------------------------------------
 
@@ -93,9 +90,9 @@ SP41$RawRGB<-rgb((SP41$TBXT-min(SP41$TBXT))/(max(SP41$TBXT)-min(SP41$TBXT)),
                  (SP41$TBX6-min(SP41$TBX6))/(max(SP41$TBX6)-min(SP41$TBX6)),
                  maxColorValue = 1)
 # Normalise smoothed signal values to 0-1 and convert into RGB hex codes
-SP41$SmoothRGB<-rgb((SP41$NormAvT-min(SP41$NormAvT))/(max(SP41$NormAvT)-min(SP41$NormAvT)),
-                    (SP41$NormAvSox2-min(SP41$NormAvSox2))/(max(SP41$NormAvSox2)-min(SP41$NormAvSox2)),
-                    (SP41$NormAvTbx6-min(SP41$NormAvTbx6))/(max(SP41$NormAvTbx6)-min(SP41$NormAvTbx6)),
+SP41$SmoothRGB<-rgb((SP41$Smooth_TBXT-min(SP41$Smooth_TBXT))/(max(SP41$Smooth_TBXT)-min(SP41$Smooth_TBXT)),
+                    (SP41$Smooth_SOX2-min(SP41$Smooth_SOX2))/(max(SP41$Smooth_SOX2)-min(SP41$Smooth_SOX2)),
+                    (SP41$Smooth_TBX6-min(SP41$Smooth_TBX6))/(max(SP41$Smooth_TBX6)-min(SP41$Smooth_TBX6)),
                     maxColorValue = 1)
 
 
@@ -139,7 +136,7 @@ ggplot() +
 # Figure 3Ci ---------------------------------------------------------------
 
 #Perform PCA on the locally smoothed values (natural log transformation)
-logTF.pca<-prcomp((Wt_E8_data[,c("logNormAvTbx6","logNormAvT","logNormAvSox2")]),center = TRUE,scale. = TRUE)
+logTF.pca<-prcomp((Wt_E8_data[,c("log_Smooth_TBX6","log_Smooth_TBXT","log_Smooth_SOX2")]),center = TRUE,scale. = TRUE)
 
 # Get standard deviation of each PC
 sdev <- logTF.pca$sdev

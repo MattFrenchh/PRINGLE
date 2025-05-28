@@ -1,14 +1,13 @@
 library(ggplot2)
 library(scico)
 library(patchwork)
-# library(RColorBrewer)
+library(readxl)
 library(reshape2)
-# Import data
-path_2_data = getwd()
-OS_Sep = '/'
-Wt_E8_data <- as.data.frame(read_csv(paste(path_2_data,"Wt_E8_data.csv", sep =OS_Sep)))
+library(readxl)
 
-NMPoutlines <- read_csv("WtE8_NMP_ROI_outlines.csv")
+# Import data
+Wt_E8_data <- as.data.frame(read_excel("S1_Data.xlsx", sheet = "Wt_E8.5_data", col_names = TRUE))
+NMPoutlines <- as.data.frame(read_excel("S1_Data.xlsx", sheet = "WtE8_NMP_ROI_outlines", col_names = TRUE))
 
 
 # Define functions --------------------------------------------------------
