@@ -6,7 +6,7 @@ library(RColorBrewer)
 library(readxl)
 
 # Import data
-Wt_E8_data <- as.data.frame(read_excel("S1_Data.xlsx", sheet = "Wt_E8.5_data", col_names = TRUE))
+Wt_E8_data <- as.data.frame(read_excel("Data_1.xlsx", sheet = "Wt_E8.5_data", col_names = TRUE))
 
 # Isolate example embyro of four somite pairs where fate map is known.
 SP4<-Wt_E8_data[Wt_E8_data$SP==4,]

@@ -5,9 +5,9 @@ library(dplyr)
 library(RColorBrewer)
 
 # Import data
-Wt_E8_data <- as.data.frame(read_excel("S1_Data.xlsx", sheet = "Wt_E8.5_data", col_names = TRUE))
-hNMP_data <- as.data.frame(read_excel("S2_Data.xlsx", sheet = "hNMP_Spatial_D3_Data", col_names = TRUE))
-Gloid_data <- as.data.frame(read_excel("S2_Data.xlsx", sheet = "Gastruloid_D5_Data", col_names = TRUE))
+Wt_E8_data <- as.data.frame(read_excel("Data_1.xlsx", sheet = "Wt_E8.5_data", col_names = TRUE))
+hNMP_data <- as.data.frame(read_excel("Data_2.xlsx", sheet = "hNMP_Spatial_D3_Data", col_names = TRUE))
+Gloid_data <- as.data.frame(read_excel("Data_2.xlsx", sheet = "Gastruloid_D5_Data", col_names = TRUE))
 #Define density colour scheme
 brewer_spectral <- rev(brewer.pal(11, "Spectral"))
 

@@ -1,10 +1,10 @@
 %% Import and Process Data from Excel
 
 % Define the file and sheet for each dataset
-Wt_E8_fileName = 'S1_Data.xlsx';
+Wt_E8_fileName = 'Data_1.xlsx';
 Wt_E8_sheetName = 'Wt_E8.5_data';
 
-Gloid_hNMP_filename = 'S2_Data.xlsx';
+Gloid_hNMP_filename = 'Data_2.xlsx';
 Gastruloid_sheetName = 'Gastruloid_D5_Data';
 hNMP_sheetName = 'hNMP_Spatial_D3_Data';
 
@@ -14,7 +14,7 @@ Gloid_data = readtable(Gloid_hNMP_filename, 'Sheet', Gastruloid_sheetName);
 hNMP_data = readtable(Gloid_hNMP_filename, 'Sheet', hNMP_sheetName);
 
 % Filter the data where NMPROI == 1 for Gastruloid and Wt E8.5 data
-Wt_E8_datanmpData = data(Wt_E8_data.NMPROI == 1, :);
+Wt_E8_datanmpData = Wt_E8_data(Wt_E8_data.NMPROI == 1, :);
 GastruloidNMPlikedata = Gloid_data(Gloid_data.NMPROI == 1, :);
 
 % Extract unique embryo IDs
@@ -31,12 +31,12 @@ for i = 1:nrep
     embryoID = reps(i);
 
     % Subset for current embryo
-    currRows = nmpData.Embryo == embryoID;
+    currRows = Wt_E8_datanmpData.Embryo == embryoID;
 
     % Extract each gene CV values
-    WtE8_Tdata{i} = nmpData.CV_TBXT(currRows);
-    WtE8_Sox2data{i} = nmpData.CV_SOX2(currRows);
-    WtE8_Tbx6data{i} = nmpData.CV_TBX6(currRows);
+    WtE8_Tdata{i} = Wt_E8_datanmpData.CV_TBXT(currRows);
+    WtE8_Sox2data{i} = Wt_E8_datanmpData.CV_SOX2(currRows);
+    WtE8_Tbx6data{i} = Wt_E8_datanmpData.CV_TBX6(currRows);
 end
 
 % Optional: display a message
@@ -61,9 +61,9 @@ hNMPdataSox2 = cell(5, 1);
 % Loop over each replicate index for CHIR = 2
 for i = 1:5
     % Extract and clean data for CHIR = 2
-    hNMPdataT{i} = table2array(hNMP_data(hNMP_data.Replicate == i & hNMP_data.CHIR == 2 & hNMP_data.logNormT > 0.3, 'CV_TBXT'));
-    hNMPdataTbx6{i} = table2array(hNMP_data(hNMP_data.Replicate == i & hNMP_data.CHIR == 2 & hNMP_data.logNormTbx6 > 0.3, 'CV_TBX6'));
-    hNMPdataSox2{i} = table2array(hNMP_data(hNMP_data.Replicate == i & hNMP_data.CHIR == 2 & hNMP_data.logNormSox2 > 0.3, 'CV_SOX2'));
+    hNMPdataT{i} = table2array(hNMP_data(hNMP_data.Replicate == i & hNMP_data.CHIR == 2 & hNMP_data.log_TBXT > 0.3, 'CV_TBXT'));
+    hNMPdataTbx6{i} = table2array(hNMP_data(hNMP_data.Replicate == i & hNMP_data.CHIR == 2 & hNMP_data.log_TBX6 > 0.3, 'CV_TBX6'));
+    hNMPdataSox2{i} = table2array(hNMP_data(hNMP_data.Replicate == i & hNMP_data.CHIR == 2 & hNMP_data.log_SOX2 > 0.3, 'CV_SOX2'));
     
     % Remove NaN values from the data
     hNMPdataT{i} = hNMPdataT{i}(~isnan(hNMPdataT{i}));
@@ -85,9 +85,9 @@ hNMPdataSox2 = cell(5, 1);
 % Loop over each replicate index for CHIR = 3
 for i = 2:4
     % Extract and clean data for CHIR = 3
-    hNMPdataT{i} = table2array(hNMP_data(hNMP_data.Replicate == i & hNMP_data.CHIR == 3 & hNMP_data.logNormT > 0.3, 'CV_TBXT'));
-    hNMPdataTbx6{i} = table2array(hNMP_data(hNMP_data.Replicate == i & hNMP_data.CHIR == 3 & hNMP_data.logNormTbx6 > 0.3, 'CV_TBX6'));
-    hNMPdataSox2{i} = table2array(hNMP_data(hNMP_data.Replicate == i & hNMP_data.CHIR == 3 & hNMP_data.logNormSox2 > 0.3, 'CV_SOX2'));
+    hNMPdataT{i} = table2array(hNMP_data(hNMP_data.Replicate == i & hNMP_data.CHIR == 3 & hNMP_data.log_TBXT > 0.3, 'CV_TBXT'));
+    hNMPdataTbx6{i} = table2array(hNMP_data(hNMP_data.Replicate == i & hNMP_data.CHIR == 3 & hNMP_data.log_TBX6 > 0.3, 'CV_TBX6'));
+    hNMPdataSox2{i} = table2array(hNMP_data(hNMP_data.Replicate == i & hNMP_data.CHIR == 3 & hNMP_data.log_SOX2 > 0.3, 'CV_SOX2'));
     
     % Remove NaN values from the data
     hNMPdataT{i} = hNMPdataT{i}(~isnan(hNMPdataT{i}));
@@ -116,12 +116,12 @@ counter = 1;
 % Loop over each unique replicate
 for i = 1:length(uniqueReplicates)
     % Get the current replicate name
-    currentReplicate = uniqueReplicates{i};
+    currentReplicate = uniqueReplicates(i);
 
     % Extract and clean data for each dataset
-    Gloid_Tdata{counter} = table2array(GastruloidNMPlikedata(strcmp(GastruloidNMPlikedata.Replicate, currentReplicate), 'CV_TBXT'));
-    Gloid_Tbx6data{counter} = table2array(GastruloidNMPlikedata(strcmp(GastruloidNMPlikedata.Replicate, currentReplicate), 'CV_TBX6'));
-    Gloid_Sox2data{counter} = table2array(GastruloidNMPlikedata(strcmp(GastruloidNMPlikedata.Replicate, currentReplicate), 'CV_SOX2'));
+    Gloid_Tdata{counter} = table2array(GastruloidNMPlikedata(GastruloidNMPlikedata.Replicate == currentReplicate & GastruloidNMPlikedata.log_TBXT > 7.8, 'CV_TBXT'));
+    Gloid_Tbx6data{counter} = table2array(GastruloidNMPlikedata(GastruloidNMPlikedata.Replicate == currentReplicate & GastruloidNMPlikedata.log_TBX6 > 7.8, 'CV_TBX6'));
+    Gloid_Sox2data{counter} = table2array(GastruloidNMPlikedata(GastruloidNMPlikedata.Replicate == currentReplicate & GastruloidNMPlikedata.log_SOX2 > 7.8, 'CV_SOX2'));
 
     % Remove NaN values from the data
     Gloid_Tdata{counter} = Gloid_Tdata{counter}(~isnan(Gloid_Tdata{counter}));
@@ -155,4 +155,4 @@ set(gcf, 'PaperPosition', [0, 0, width, height]); % Position and size on paper
 set(gcf, 'PaperSize', [width, height]); % PDF size
 
 %% Save figure as PDF with 800 DPI resolution
-print('NMP_CV_Comparison', '-dpdf', '-r800', '-painters');
+% print('NMP_CV_Comparison', '-dpdf', '-r800', '-painters');

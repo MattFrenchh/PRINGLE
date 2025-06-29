@@ -1,5 +1,5 @@
 %% Setup: Define File and Sheet Info
-Wt_E8_fileName = 'S1_Data.xlsx';
+Wt_E8_fileName = 'Data_1.xlsx';
 Wt_E8_sheetName = 'Wt_E8.5_data';
 
 %% Data Import
@@ -24,9 +24,10 @@ dataTbx6 = cell(nrep, 1);
 
 %% Extract CV Data by Embryo
 for i = 1:nrep
-    dataSox2{i} = table2array(Sox2posNMP(Sox2posNMP.Embryo == i, 'CV_SOX2'));
-    dataT{i}    = table2array(TposNMP(TposNMP.Embryo == i, 'CV_TBXT'));
-    dataTbx6{i} = table2array(Tbx6posNMP(Tbx6posNMP.Embryo == i, 'CV_TBX6'));
+    rep = reps(i);
+    dataSox2{i} = table2array(Sox2posNMP(Sox2posNMP.Embryo == rep, 'CV_SOX2'));
+    dataT{i}    = table2array(TposNMP(TposNMP.Embryo == rep, 'CV_TBXT'));
+    dataTbx6{i} = table2array(Tbx6posNMP(Tbx6posNMP.Embryo == rep, 'CV_TBX6'));
 end
 
 %% Visualization: Violin Plots

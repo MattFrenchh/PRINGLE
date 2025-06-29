@@ -4,7 +4,7 @@ library(patchwork)
 library(readxl)
 
 # Load the data 
-Wt_E8_data <- as.data.frame(read_excel("S1_Data.xlsx", sheet = "Wt_E8.5_data", col_names = TRUE))
+Wt_E8_data <- as.data.frame(read_excel("Data_1.xlsx", sheet = "Wt_E8.5_data", col_names = TRUE))
 
 # Plot settings
 point_size <- 0.8
